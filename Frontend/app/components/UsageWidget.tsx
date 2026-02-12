@@ -4,8 +4,9 @@ import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import { AI_BACKEND_API_BASE_URL } from "~/constants/urls";
-import type { Usage } from "../../types/Usage";
+import { periodTypeToDescriptionMap, type Usage } from "../../types/Usage";
 import TextField from "@mui/material/TextField";
+import { ScatterChart } from "@mui/x-charts/ScatterChart";
 
 export default function UsageWidget({ initialTeamId, initialUsageData }: { initialTeamId?: number, initialUsageData?: Usage[] }) {
   const [teamId, setTeamId] = React.useState(initialTeamId ?? "");
@@ -34,6 +35,14 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
     }
   };
 
+  const scatterPoints =
+    data?.map((u, index) => ({
+      id: index,
+      x: index, // ordinal index for x-axis
+      y: u.totalCalls,
+      period: periodTypeToDescriptionMap[u.period] ?? "",
+    })) ?? [];
+
   return (
     <div style={{ width: "100%" }}>
       <Typography variant="h5" sx={{ mb: 2 }}>
@@ -54,6 +63,42 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
         {loading && (
           <Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
             <CircularProgress sx={{ color: "rgba(255,255,255,0.8)" }} />
+          </Box>
+        )}
+
+        {data && (
+          <Box sx={{ mt: 4 }}>
+            {scatterPoints.length === 0 ? (
+              <Typography variant="body1" sx={{ mt: 2, fontStyle: "italic" }}>
+                No usage data available to display.
+              </Typography>
+            ) : (
+              <ScatterChart
+                width={1000}
+                height={400}
+                margin={{ top: 20, right: 40, bottom: 40, left: 60 }}
+                series={[
+                  {
+                    label: "Total Calls",
+                    data: scatterPoints,
+                  },
+                ]}
+                xAxis={[
+                  {
+                    label: "Period",
+                    data: scatterPoints.map((p) => p.x),
+                    valueFormatter: (index: number) =>
+                      scatterPoints[index]?.period ?? "",
+                  },
+                ]}
+                yAxis={[
+                  {
+                    label: "Total Calls",
+                    min: 0,
+                  },
+                ]}
+              />
+            )}
           </Box>
         )}
 
