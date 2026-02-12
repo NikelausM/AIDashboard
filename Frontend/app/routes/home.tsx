@@ -16,12 +16,14 @@ export function meta() {
   ];
 }
 
+const initialTeamId = 101;
+
 /**
  * Fetches data asynchronously in parallel with page load.
  * @returns The initial data for the page.
  */
 export async function loader(args: LoaderFunctionArgs): Promise<Usage[]> {
-  const response = await fetch(`${AI_BACKEND_API_BASE_URL}?period=${Period.Last7Days}`);
+  const response = await fetch(`${AI_BACKEND_API_BASE_URL}/${initialTeamId}`);
   return response.json();
 }
 
@@ -39,7 +41,7 @@ export default function Home() {
           alignItems: 'center',
         }}
       >
-        <UsageWidget initialPeriod={Period.Last7Days} initialUsageData={initialData}/>
+        <UsageWidget initialTeamId={initialTeamId} initialUsageData={initialData}/>
       </Box>
     </Container>
   );

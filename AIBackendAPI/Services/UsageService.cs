@@ -8,9 +8,9 @@ namespace AIBackendAPI.Services
     {
         private readonly UsageRepository _usageRepository = usageRepository;
 
-        public async Task<IEnumerable<Usage>> GetUsagesAsync(string period)
+        public async Task<IEnumerable<Usage>> GetUsageAsync(long teamId)
         {
-            return await _usageRepository.GetUsagesAsync(period);
+            return await _usageRepository.GetUsageAsync(teamId);
         }
 
         public TopAIModelDto CreateTopAIModelDto(TopAIModel topAIModel)

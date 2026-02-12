@@ -8,10 +8,10 @@ namespace AIBackendAPI.Data.Repositories
     {
         private readonly UsageContext _context = context;
 
-        public async Task<IEnumerable<Usage>> GetUsagesAsync(string period)
+        public async Task<IEnumerable<Usage>> GetUsageAsync(long teamId)
         {
             var query = _context.Usages
-                .Where(usage => period == PeriodConstants.All || usage.Period == period)
+                .Where(usage => usage.TeamId == teamId)
                 .Include(usage => usage.TopModels)
                 .ThenInclude(topModel => topModel.AIModel);
 

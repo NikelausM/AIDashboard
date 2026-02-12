@@ -10,9 +10,10 @@ import Select, { type SelectChangeEvent } from "@mui/material/Select";
 import Typography from "@mui/material/Typography";
 import { AI_BACKEND_API_BASE_URL } from "~/constants/urls";
 import type { Usage } from "../../types/Usage";
+import TextField from "@mui/material/TextField";
 
-export default function UsageWidget({ initialPeriod, initialUsageData }: { initialPeriod?: string, initialUsageData?: Usage[] }) {
-  const [period, setPeriod] = React.useState(initialPeriod ?? "");
+export default function UsageWidget({ initialTeamId, initialUsageData }: { initialTeamId?: number, initialUsageData?: Usage[] }) {
+  const [teamId, setTeamId] = React.useState(initialTeamId ?? "");
   const [loading, setLoading] = React.useState(false);
   const [data, setData] = React.useState<Usage[] | null>(initialUsageData ?? null);
   const [error, setError] = React.useState<string | null>(null);
@@ -23,7 +24,7 @@ export default function UsageWidget({ initialPeriod, initialUsageData }: { initi
     setError(null);
 
     try {
-      const response = await fetch(`${AI_BACKEND_API_BASE_URL}?period=${period}`);
+      const response = await fetch(`${AI_BACKEND_API_BASE_URL}/${teamId}`);
       if (!response.ok) {
         throw new Error(`API error: ${response.status}`);
       }
@@ -45,28 +46,16 @@ export default function UsageWidget({ initialPeriod, initialUsageData }: { initi
       </Typography>
 
       <form onSubmit={handleSubmit}>
-        <FormControl fullWidth sx={{ mb: 2 }}>
-          <InputLabel id="period-label">Period</InputLabel>
-          <Select
-            labelId="period-label"
-            id="period"
-            name="period"
-            value={period}
-            label="Period"
-            onChange={(e: SelectChangeEvent) =>
-              setPeriod(e.target.value as string)
-            }
-          >
-            <MenuItem value="last_7_days">Last 7 Days</MenuItem>
-            <MenuItem value="last_month">Last Month</MenuItem>
-            <MenuItem value="last_3_months">Last 3 Months</MenuItem>
-            <MenuItem value="last_year">Last Year</MenuItem>
-            <MenuItem value="all">All Time</MenuItem>
-            {/* uncomment next line to simulate an error */}
-            {/* <MenuItem value="simulate_error">Simulate Error</MenuItem> */}
-          </Select>
-        </FormControl>
-
+        <TextField 
+          id="teamId" 
+          label="teamId" 
+          variant="filled" 
+          value={teamId} 
+          onChange={(e) =>
+            setTeamId(e.target.value as string)
+          } 
+          sx={{ mb: 2 }}/>
+        <br/>
         {loading && (
           <Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
             <CircularProgress sx={{ color: "rgba(255,255,255,0.8)" }} />
@@ -84,9 +73,9 @@ export default function UsageWidget({ initialPeriod, initialUsageData }: { initi
         </Button>
       </form>
 
-      <pre>
+      {!error && <pre>
         <code>{JSON.stringify(data, null, 4)}</code>
-      </pre>
+      </pre>}
     </div>
   );
 }

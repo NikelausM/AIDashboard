@@ -17,16 +17,16 @@ namespace AIBackendAPI.Controllers
     {
         private readonly UsageService _usageService = usageService;
 
-        // GET: api/Usage
-        // if period not provided, then built in request validation returns 400 bad request
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<UsageDto>>> GetUsages(string period)
+        // GET: api/usage/5
+        // auto validates teamId to ensure it is of type long (i.e., not a string or otherwise)
+        [HttpGet("{teamId}")]
+        public async Task<ActionResult<IEnumerable<UsageDto>>> GetUsage(long teamId)
         {
-            if (!PeriodConstants.AllConstants.Contains(period))
-            {
-                return BadRequest("period is required. Valid periods include: " + string.Join(",", PeriodConstants.AllConstants));
-            }
-            var usages = await _usageService.GetUsagesAsync(period);
+            // if (!PeriodConstants.AllConstants.Contains(period))
+            // {
+            //     return BadRequest("period is required. Valid periods include: " + string.Join(",", PeriodConstants.AllConstants));
+            // }
+            var usages = await _usageService.GetUsageAsync(teamId);
             var usageDtos = usages.Select(_usageService.CreateUsageDto).ToList();
             return usageDtos;
         }
