@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import { useLoaderData, type LoaderFunctionArgs } from 'react-router';
 import UsageWidget from '~/components/UsageWidget';
 import { AI_BACKEND_API_BASE_URL } from '~/constants/urls';
-import {Period, type Usage } from '../../types/Usage';
+import { type Usage } from '../../types/Usage';
 
 export function meta() {
   return [
