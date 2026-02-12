@@ -29,7 +29,7 @@ public class UsageServiceTests
             }
         };
 
-        var repoMock = new Mock<UsageRepository>();
+        var repoMock = new Mock<IUsageRepository>();
         repoMock
             .Setup(r => r.GetUsageAsync(teamId))
             .ReturnsAsync(expectedUsage);

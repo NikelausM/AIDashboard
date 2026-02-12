@@ -4,7 +4,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AIBackendAPI.Data.Repositories
 {
-    public class UsageRepository(UsageContext context)
+    public interface IUsageRepository
+    {
+        Task<IEnumerable<Usage>> GetUsageAsync(long teamId);
+    }
+
+    public class UsageRepository(UsageContext context) : IUsageRepository
     {
         private readonly UsageContext _context = context;
 

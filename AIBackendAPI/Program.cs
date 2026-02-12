@@ -13,7 +13,7 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddDbContext<UsageContext>(opt => opt.UseInMemoryDatabase("Usages"));
-builder.Services.AddScoped<UsageRepository>();
+builder.Services.AddScoped<IUsageRepository, UsageRepository>();
 builder.Services.AddScoped<UsageService>();
 builder.Services.AddCors(options =>
 {
