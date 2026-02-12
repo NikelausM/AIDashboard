@@ -16,7 +16,17 @@ public class UsageServiceTests
 
         var expectedUsage = new List<Usage>
         {
-            new Usage { TeamId = teamId, TotalCalls = 10 }
+            new ()
+            {
+                Id = 1,
+                TeamId = 101,
+                TotalCalls = 100,
+                TokensConsumed = 1000,
+                EstimatedCost = 0.00089,
+                Period = "last_7_days",
+                DateCreated = DateTime.Now,
+                TopModels = []
+            }
         };
 
         var repoMock = new Mock<UsageRepository>();
