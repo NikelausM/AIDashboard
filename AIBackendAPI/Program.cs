@@ -15,6 +15,16 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<UsageContext>(opt => opt.UseInMemoryDatabase("Usages"));
 builder.Services.AddScoped<UsageRepository>();
 builder.Services.AddScoped<UsageService>();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 
 var app = builder.Build();
 
@@ -31,6 +41,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseCors("AllowFrontend");
 
 app.MapControllers();
 

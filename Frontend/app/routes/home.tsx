@@ -1,23 +1,33 @@
 import * as React from 'react';
 import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
-import { Link as ReactRouterLink } from 'react-router';
-import ProTip from '~/components/ProTip';
-import Copyright from '~/components/Copyright';
+import { useLoaderData, type LoaderFunctionArgs } from 'react-router';
+import UsageWidget from '~/components/UsageWidget';
+import { AI_BACKEND_API_BASE_URL } from '~/constants/urls';
+import {Period, type Usage } from '../../types/Usage';
 
 export function meta() {
   return [
-    { title: 'Material UI - React Router example in TypeScript' },
+    { title: 'AI Dashboard' },
     {
       name: 'description',
-      content: 'Welcome to Material UI - React Router example in TypeScript!',
+      content: 'A a dashboard widget that displays AI platform usage metrics for a team.',
     },
   ];
 }
 
+/**
+ * Fetches data asynchronously in parallel with page load.
+ * @returns The initial data for the page.
+ */
+export async function loader(args: LoaderFunctionArgs): Promise<Usage[]> {
+  const response = await fetch(`${AI_BACKEND_API_BASE_URL}?period=${Period.Last7Days}`);
+  return response.json();
+}
+
 export default function Home() {
+  const initialData = useLoaderData();
+
   return (
     <Container maxWidth="lg">
       <Box
@@ -29,14 +39,7 @@ export default function Home() {
           alignItems: 'center',
         }}
       >
-        <Typography variant="h4" component="h1" sx={{ mb: 2 }}>
-          Material UI - React Router example in TypeScript
-        </Typography>
-        <Link to="/about" color="secondary" component={ReactRouterLink}>
-          Go to the about page
-        </Link>
-        <ProTip />
-        <Copyright />
+        <UsageWidget initialPeriod={Period.Last7Days} initialUsageData={initialData}/>
       </Box>
     </Container>
   );

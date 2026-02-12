@@ -1,4 +1,5 @@
 import type { Config } from '@react-router/dev/config';
+import type { LoaderFunctionArgs } from 'react-router';
 
 export default {
   // Config options...
