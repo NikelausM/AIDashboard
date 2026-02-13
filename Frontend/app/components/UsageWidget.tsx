@@ -8,7 +8,7 @@ import { AggregatePeriod, enumAggregatePeriodsArray, enumAggregatePeriodsStringA
 import { CardContent, Divider, Card, CardHeader, TextField, AccordionDetails, AccordionSummary, Accordion, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, Select, MenuItem } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { getPeriodDescription } from "~/utils/dataUtils";
-import { BarChart } from "@mui/x-charts";
+import { BarChart, LineChart } from "@mui/x-charts";
 
 export default function UsageWidget({ initialTeamId, initialUsageData }: { initialTeamId?: number, initialUsageData?: Usage[] }) {
   const [teamId, setTeamId] = React.useState(initialTeamId ?? "");
@@ -98,7 +98,9 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
     filteredUsage?.map((entry, index) => ({
       id: index,
       x: index,
-      y: entry.totalCalls,
+      totalCalls: entry.totalCalls,
+      tokensConsumed: entry.tokensConsumed,
+      estimatedCost: entry.estimatedCost,
       period: getPeriodDescription(entry.period),
     })) ?? [];
 
@@ -203,7 +205,36 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
                   No usage data available to display.
                 </Typography>
               ) : (
-                <BarChart
+                <div>
+                  <LineChart
+                    width={900}
+                    height={400}
+                    margin={{ top: 20, right: 60, bottom: 100, left: 60 }}
+                    xAxis={[
+                      {
+                        scaleType: "band",
+                        data: displayData.map((point) => point.period),
+                        label: "Period",
+                        tickLabelPlacement: "middle",
+                        tickPlacement: "end",
+                      },
+                    ]}
+                    yAxis={[
+                      {
+                        label: "Total Calls",
+                        min: 0,
+                      },
+                    ]}
+                    series={[
+                      {
+                        label: "Total Calls vs. Period",
+                        data: displayData.map((point) => point.totalCalls),
+                        color: "#1976d2",
+                      },
+                    ]}
+                  />
+
+                <LineChart
                   width={900}
                   height={400}
                   margin={{ top: 20, right: 60, bottom: 100, left: 60 }}
@@ -218,19 +249,47 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
                   ]}
                   yAxis={[
                     {
-                      label: "Total Calls",
+                      label: "Tokens Consumed",
                       min: 0,
                     },
                   ]}
                   series={[
                     {
-                      label: "Total Calls",
-                      data: displayData.map((point) => point.y),
-                      color: "#1976d2",
+                      label: "Tokens Consumed vs. Period",
+                      data: displayData.map((point) => point.tokensConsumed),
+                      color: "orange",
                     },
                   ]}
                 />
 
+                <LineChart
+                  width={900}
+                  height={400}
+                  margin={{ top: 20, right: 60, bottom: 100, left: 60 }}
+                  xAxis={[
+                    {
+                      scaleType: "band",
+                      data: displayData.map((point) => point.period),
+                      label: "Period",
+                      tickLabelPlacement: "middle",
+                      tickPlacement: "end",
+                    },
+                  ]}
+                  yAxis={[
+                    {
+                      label: "Estimated Cost ($)",
+                      min: 0,
+                    },
+                  ]}
+                  series={[
+                    {
+                      label: "Estimated Cost ($) vs. Period",
+                      data: displayData.map((point) => point.estimatedCost),
+                      color: "orange",
+                    },
+                  ]}
+                />
+                </div>
               )}
             </Box>
           )}
