@@ -6,10 +6,9 @@ import Typography from "@mui/material/Typography";
 import { AI_BACKEND_API_BASE_URL } from "~/constants/urls";
 import { AggregatePeriod, type Usage } from "../../types/Usage";
 import { CardContent, Divider, Card, CardHeader, TextField, AccordionDetails, AccordionSummary, Accordion, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, Select, MenuItem } from "@mui/material";
-import { ScatterChart } from "@mui/x-charts/ScatterChart";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { getPeriodDescription } from "~/utils/dataUtils";
-import type { ScatterValueType } from "@mui/x-charts";
+import { BarChart } from "@mui/x-charts";
 
 export default function UsageWidget({ initialTeamId, initialUsageData }: { initialTeamId?: number, initialUsageData?: Usage[] }) {
   const [teamId, setTeamId] = React.useState(initialTeamId ?? "");
@@ -203,24 +202,17 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
                   No usage data available to display.
                 </Typography>
               ) : (
-                <ScatterChart
+                <BarChart
                   width={900}
                   height={400}
                   margin={{ top: 20, right: 60, bottom: 100, left: 60 }}
-                  series={[
-                    {
-                      label: "Total Calls",
-                      data: displayData,
-                    },
-                  ]}
                   xAxis={[
                     {
-                      label: "Period",
                       scaleType: "band",
-                      data: displayData.map((point) => point.x),
-                      valueFormatter: (index: number) =>
-                        displayData[index].period,
-                      tickSize: 6
+                      data: displayData.map((point) => point.period),
+                      label: "Period",
+                      tickLabelPlacement: "middle",
+                      tickPlacement: "end",
                     },
                   ]}
                   yAxis={[
@@ -229,7 +221,15 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
                       min: 0,
                     },
                   ]}
+                  series={[
+                    {
+                      label: "Total Calls",
+                      data: displayData.map((point) => point.y),
+                      color: "#1976d2",
+                    },
+                  ]}
                 />
+
               )}
             </Box>
           )}
