@@ -8,7 +8,7 @@ namespace AIBackendAPI.Common
         public static Tuple<IList<AIModel>, IList<AIModelCall>, IList<TopAIModel>, IList<Usage>> GetTestData()
         {
             List<AIModel> Models = [];
-            List<AIModelCall> ModelCalls = []; // stays empty
+            List<AIModelCall> ModelCalls = [];
             List<TopAIModel> TopModels = [];
             List<Usage> UsageData = [];
 
