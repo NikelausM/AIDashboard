@@ -262,6 +262,7 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
           sx={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(450px, 1fr))",
+            gridAutoRows: "500px",
             gap: 4,
           }}
         >
@@ -274,9 +275,9 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
             </Typography>
           ) : (
             <>
-              <Card sx={{ gridColumn: "1 / -1" }}>
-                <CardHeader title="Top Models Usage Over Time" />
-                <CardContent>
+              <Card sx={{ gridColumn: "1 / -1", height: "100%"}}>
+                <CardHeader title="Top Models Usage Over Time" sx={{ height: "20%" }}/>
+                <CardContent sx={{ height: "80%" }}>
                   <BarChart
                     xAxis={[
                       {
@@ -299,8 +300,8 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
               </Card>
 
               <Card>
-                <CardHeader title="Total Calls" />
-                <CardContent>
+                <CardHeader title="Total Calls" sx={{ height: "20%" }} />
+                <CardContent sx={{ height: "80%" }}>
                 <LineChart
                   xAxis={[
                     {
@@ -329,38 +330,38 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
               </Card>
 
               <Card>
-                <CardHeader title="Tokens Consumed" />
-                <CardContent>
-                <LineChart
-                  xAxis={[
-                    {
-                      scaleType: "band",
-                      data: displayData.map((point) => point.period),
-                      label: "Period",
-                      tickLabelPlacement: "middle",
-                      tickPlacement: "end",
-                    },
-                  ]}
-                  yAxis={[
-                    {
-                      label: "Tokens Consumed",
-                      min: 0,
-                    },
-                  ]}
-                  series={[
-                    {
-                      label: "Tokens Consumed vs. Period",
-                      data: displayData.map((point) => point.tokensConsumed),
-                      color: "yellow",
-                    },
-                  ]}
-                />
+                <CardHeader title="Tokens Consumed" sx={{ height: "20%" }} />
+                <CardContent sx={{ height: "80%" }}>
+                  <LineChart
+                    xAxis={[
+                      {
+                        scaleType: "band",
+                        data: displayData.map((point) => point.period),
+                        label: "Period",
+                        tickLabelPlacement: "middle",
+                        tickPlacement: "end",
+                      },
+                    ]}
+                    yAxis={[
+                      {
+                        label: "Tokens Consumed",
+                        min: 0,
+                      },
+                    ]}
+                    series={[
+                      {
+                        label: "Tokens Consumed vs. Period",
+                        data: displayData.map((point) => point.tokensConsumed),
+                        color: "yellow",
+                      },
+                    ]}
+                  />
                 </CardContent>
               </Card>
 
               <Card>
-                <CardHeader title="Estimated Cost" />
-                <CardContent>
+                <CardHeader title="Estimated Cost" sx={{ height: "20%" }} />
+                <CardContent sx={{ height: "80%" }}>
                   <LineChart
                     xAxis={[
                       {
