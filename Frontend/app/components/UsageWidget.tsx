@@ -148,7 +148,6 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
         <Divider />
 
         <CardContent>
-          {/* FORM CARD */}
           <Card sx={{ mb: 4 }}>
             <CardHeader title="Search Usage" />
             <CardContent>
