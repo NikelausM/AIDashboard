@@ -5,8 +5,9 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import { AI_BACKEND_API_BASE_URL } from "~/constants/urls";
 import { periodTypeToDescriptionMap, type Usage } from "../../types/Usage";
-import TextField from "@mui/material/TextField";
+import { CardContent, Divider, Card, CardHeader, TextField, AccordionDetails, AccordionSummary, Accordion } from "@mui/material";
 import { ScatterChart } from "@mui/x-charts/ScatterChart";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export default function UsageWidget({ initialTeamId, initialUsageData }: { initialTeamId?: number, initialUsageData?: Usage[] }) {
   const [teamId, setTeamId] = React.useState(initialTeamId ?? "");
@@ -19,6 +20,9 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
     setLoading(true);
     setError(null);
 
+    const start = performance.now();
+    const minDuration = 2000;
+
     try {
       const response = await fetch(`${AI_BACKEND_API_BASE_URL}/${teamId}`);
       if (!response.ok) {
@@ -26,12 +30,18 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
       }
 
       const json: Usage[] = await response.json();
-      
       setData(json);
     } catch (err: any) {
       setError(err.message);
     } finally {
-      setLoading(false);
+      const elapsed = performance.now() - start;
+      const remaining = minDuration - elapsed;
+
+      if (remaining > 0) {
+        setTimeout(() => setLoading(false), remaining);
+      } else {
+        setLoading(false);
+      }
     }
   };
 
@@ -44,78 +54,100 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
     })) ?? [];
 
   return (
-    <div style={{ width: "100%" }}>
-      <Typography variant="h5" sx={{ mb: 2 }}>
-        Usage Metrics
-      </Typography>
+    <Card sx={{ width: "100%", maxWidth: 1100, mx: "auto", p: 2 }}>
+      <CardHeader
+        title="Usage Metrics"
+        subheader="View API usage by team"
+        sx={{ pb: 0 }}
+      />
 
-      <form onSubmit={handleSubmit}>
-        <TextField 
-          id="teamId" 
-          label="teamId" 
-          variant="filled" 
-          value={teamId} 
-          onChange={(e) =>
-            setTeamId(e.target.value as string)
-          } 
-          sx={{ mb: 2 }}/>
-        <br/>
-        {loading && (
-          <Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
-            <CircularProgress sx={{ color: "rgba(255,255,255,0.8)" }} />
-          </Box>
-        )}
+      <Divider />
 
-        {data && (
-          <Box sx={{ mt: 4 }}>
-            {scatterPoints.length === 0 ? (
-              <Typography variant="body1" sx={{ mt: 2, fontStyle: "italic" }}>
-                No usage data available to display.
-              </Typography>
-            ) : (
-              <ScatterChart
-                width={1000}
-                height={400}
-                margin={{ top: 20, right: 40, bottom: 40, left: 60 }}
-                series={[
-                  {
-                    label: "Total Calls",
-                    data: scatterPoints,
-                  },
-                ]}
-                xAxis={[
-                  {
-                    label: "Period",
-                    data: scatterPoints.map((p) => p.x),
-                    valueFormatter: (index: number) =>
-                      scatterPoints[index]?.period ?? "",
-                  },
-                ]}
-                yAxis={[
-                  {
-                    label: "Total Calls",
-                    min: 0,
-                  },
-                ]}
-              />
-            )}
-          </Box>
-        )}
+      <CardContent>
+        <form onSubmit={handleSubmit}>
+          <TextField
+            id="teamId"
+            label="Team ID"
+            variant="filled"
+            value={teamId}
+            onChange={(e) => setTeamId(e.target.value as string)}
+            sx={{ mb: 2, width: 200 }}
+          />
 
-        {error && (
-          <Typography color="error" sx={{ my: 2 }}>
-            Error: There was a problem getting the usage data
-          </Typography>
-        )}
+          {loading && (
+            <Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
+              <CircularProgress size={30} />
+            </Box>
+          )}
 
-        <Button variant="contained" type="submit" disabled={loading}>
-          {loading ? "Loading…" : "Submit"}
-        </Button>
-      </form>
+          {data && !loading && (
+            <Box sx={{ mt: 4 }}>
+              {scatterPoints.length === 0 ? (
+                <Typography
+                  variant="body1"
+                  sx={{ mt: 2, fontStyle: "italic", textAlign: "center" }}
+                >
+                  No usage data available to display.
+                </Typography>
+              ) : (
+                <ScatterChart
+                  width={600}
+                  height={400}
+                  margin={{ top: 20, right: 40, bottom: 40, left: 60 }}
+                  series={[
+                    {
+                      label: "Total Calls",
+                      data: scatterPoints,
+                    },
+                  ]}
+                  xAxis={[
+                    {
+                      label: "Period",
+                      data: scatterPoints.map((point) => point.x),
+                      valueFormatter: (index: number) =>
+                        scatterPoints[index]?.period ?? "",
+                    },
+                  ]}
+                  yAxis={[
+                    {
+                      label: "Total Calls",
+                      min: 0,
+                    },
+                  ]}
+                />
+              )}
+            </Box>
+          )}
 
-      {!error && <pre>
-        <code>{JSON.stringify(data, null, 4)}</code>
-      </pre>}
-    </div>
+          {error && (
+            <Typography color="error" sx={{ my: 2 }}>
+              Error: There was a problem getting the usage data
+            </Typography>
+          )}
+
+          <Button variant="contained" type="submit" disabled={loading}>
+            {loading ? "Loading…" : "Submit"}
+          </Button>
+        </form>
+
+      {!error && data && (
+        <Accordion sx={{ mt: 3 }}>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography variant="subtitle1" fontWeight={600}>
+              Raw Data
+            </Typography>
+          </AccordionSummary>
+
+          <AccordionDetails>
+            <pre style={{ margin: 0, whiteSpace: "pre-wrap" }}>
+              <code>{JSON.stringify(data, null, 4)}</code>
+            </pre>
+          </AccordionDetails>
+        </Accordion>
+      )}
+
+      </CardContent>
+    </Card>
   );
+
 }
