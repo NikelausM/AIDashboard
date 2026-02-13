@@ -20,8 +20,8 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
     "aggregate" | "range"
   >("aggregate");
   const initialWeekUsageData = data?.filter(entry => !enumAggregatePeriodsStringArray.includes(entry.period));
-  const [startWeek, setStartWeek] = React.useState(initialWeekUsageData ? initialWeekUsageData[0].period : "");
-  const [endWeek, setEndWeek] = React.useState(initialWeekUsageData ? initialWeekUsageData[initialWeekUsageData.length - 1].period : "");
+  const [startWeek, setStartWeek] = React.useState(initialWeekUsageData && initialWeekUsageData.length > 0 ? initialWeekUsageData[0].period : "");
+  const [endWeek, setEndWeek] = React.useState(initialWeekUsageData && initialWeekUsageData.length > 0 ? initialWeekUsageData[initialWeekUsageData.length - 1].period : "");
 
   const handleSubmit = async (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -137,98 +137,132 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
   });
 
   return (
-    <Card sx={{ width: "100%", maxWidth: 1100, mx: "auto", p: 2 }}>
-      <CardHeader
-        title="Usage Metrics"
-        subheader="View API usage by team"
-        sx={{ pb: 0 }}
-      />
+    <div>
+      <Card sx={{ width: "100%", maxWidth: 1100, mx: "auto", p: 2 }}>
+        <CardHeader
+          title="Usage Metrics"
+          subheader="View API usage by team"
+          sx={{ pb: 0 }}
+        />
 
-      <Divider />
+        <Divider />
 
-      <CardContent>
-        <form onSubmit={handleSubmit}>
-          <TextField
-            id="teamId"
-            label="Team ID"
-            variant="filled"
-            value={teamId}
-            onChange={(e) => setTeamId(e.target.value as string)}
-            sx={{ mb: 2, width: 200 }}
-          />
-
-          <Box sx={{ mb: 2 }}>
-            <FormControl sx={{ mb: 3 }}>
-              <FormLabel>Select Period Type</FormLabel>
-              <RadioGroup
-                row
-                value={periodType}
-                onChange={(e) =>
-                  setPeriodType(e.target.value as "aggregate" | "range")
-                }
-              >
-                <FormControlLabel
-                  value="aggregate"
-                  control={<Radio />}
-                  label="Aggregate Period"
+        <CardContent>
+          {/* FORM CARD */}
+          <Card sx={{ mb: 4 }}>
+            <CardHeader title="Search Usage" />
+            <CardContent>
+              <form onSubmit={handleSubmit}>
+                <TextField
+                  id="teamId"
+                  label="Team ID"
+                  variant="filled"
+                  value={teamId}
+                  onChange={(e) => setTeamId(e.target.value as string)}
+                  sx={{ mb: 2, width: 200 }}
                 />
-                <FormControlLabel
-                  value="range"
-                  control={<Radio />}
-                  label="Date Range"
-                />
-              </RadioGroup>
-            </FormControl>
-          </Box>
 
-          {periodType === "range" && (
-            <Box sx={{ display: "flex", gap: 3, mb: 3 }}>
-              <FormControl sx={{ width: 200 }}>
-                <FormLabel>Start Week</FormLabel>
-                <Select
-                  value={startWeek}
-                  onChange={(e) => setStartWeek(e.target.value)}
-                  displayEmpty
-                >
-                  <MenuItem value="">
-                    <em>Select Start</em>
-                  </MenuItem>
-                  {weekOptions.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+                <Box sx={{ mb: 2 }}>
+                  <FormControl sx={{ mb: 3 }}>
+                    <FormLabel>Select Period Type</FormLabel>
+                    <RadioGroup
+                      row
+                      value={periodType}
+                      onChange={(e) =>
+                        setPeriodType(e.target.value as "aggregate" | "range")
+                      }
+                    >
+                      <FormControlLabel
+                        value="aggregate"
+                        control={<Radio />}
+                        label="Aggregate Period"
+                      />
+                      <FormControlLabel
+                        value="range"
+                        control={<Radio />}
+                        label="Date Range"
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                </Box>
 
-              <FormControl sx={{ width: 200 }}>
-                <FormLabel>End Week</FormLabel>
-                <Select
-                  value={endWeek}
-                  onChange={(e) => setEndWeek(e.target.value)}
-                  displayEmpty
-                >
-                  <MenuItem value="">
-                    <em>Select End</em>
-                  </MenuItem>
-                  {weekOptions.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Box>
-          )}
+                {periodType === "range" && (
+                  <Box sx={{ display: "flex", gap: 3, mb: 3 }}>
+                    <FormControl sx={{ width: 200 }}>
+                      <FormLabel>Start Week</FormLabel>
+                      <Select
+                        value={startWeek}
+                        onChange={(e) => setStartWeek(e.target.value)}
+                        displayEmpty
+                      >
+                        <MenuItem value="">
+                          <em>Select Start</em>
+                        </MenuItem>
+                        {weekOptions.map((option) => (
+                          <MenuItem key={option.value} value={option.value}>
+                            {option.label}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
 
-          {loading && (
-            <Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
-              <CircularProgress size={30} />
-            </Box>
-          )}
+                    <FormControl sx={{ width: 200 }}>
+                      <FormLabel>End Week</FormLabel>
+                      <Select
+                        value={endWeek}
+                        onChange={(e) => setEndWeek(e.target.value)}
+                        displayEmpty
+                      >
+                        <MenuItem value="">
+                          <em>Select End</em>
+                        </MenuItem>
+                        {weekOptions.map((option) => (
+                          <MenuItem key={option.value} value={option.value}>
+                            {option.label}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Box>
+                )}
+
+                {loading && (
+                  <Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
+                    <CircularProgress size={30} />
+                  </Box>
+                )}
+
+                {error && !loading && (
+                  <Typography color="error" sx={{ my: 2 }}>
+                    Error: There was a problem getting the usage data
+                  </Typography>
+                )}
+
+                <Button variant="contained" type="submit" disabled={loading}>
+                  {loading ? "Loading…" : "Submit"}
+                </Button>
+              </form>
+
+              {!error && !loading && data && (
+                <Accordion sx={{ mt: 3 }}>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography variant="subtitle1" fontWeight={600}>
+                      Raw Data
+                    </Typography>
+                  </AccordionSummary>
+
+                  <AccordionDetails>
+                    <pre style={{ margin: 0, whiteSpace: "pre-wrap" }}>
+                      <code>{JSON.stringify(data, null, 4)}</code>
+                    </pre>
+                  </AccordionDetails>
+                </Accordion>
+              )}
+            </CardContent>
+          </Card>
 
           {data && !error && !loading && (
-            <Box sx={{ mt: 4 }}>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 4 }}>
               {displayData.length === 0 ? (
                 <Typography
                   variant="body1"
@@ -237,146 +271,149 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
                   No usage data available to display.
                 </Typography>
               ) : (
-                <div>
-                  <LineChart
-                    width={900}
-                    height={400}
-                    margin={{ top: 20, right: 60, bottom: 100, left: 60 }}
-                    xAxis={[
-                      {
-                        scaleType: "band",
-                        data: displayData.map((point) => point.period),
-                        label: "Period",
-                        tickLabelPlacement: "middle",
-                        tickPlacement: "end",
-                      },
-                    ]}
-                    yAxis={[
-                      {
-                        label: "Total Calls",
-                        min: 0,
-                      },
-                    ]}
-                    series={[
-                      {
-                        label: "Total Calls vs. Period",
-                        data: displayData.map((point) => point.totalCalls),
-                        color: "#1976d2",
-                      },
-                    ]}
-                  />
+                <>
+                  <Card>
+                    <CardHeader title="Total Calls" />
+                    <CardContent>
+                    <LineChart
+                      width={900}
+                      height={400}
+                      margin={{ top: 20, right: 60, bottom: 100, left: 60 }}
+                      xAxis={[
+                        {
+                          scaleType: "band",
+                          data: displayData.map((point) => point.period),
+                          label: "Period",
+                          tickLabelPlacement: "middle",
+                          tickPlacement: "end",
+                        },
+                      ]}
+                      yAxis={[
+                        {
+                          label: "Total Calls",
+                          min: 0,
+                        },
+                      ]}
+                      series={[
+                        {
+                          label: "Total Calls vs. Period",
+                          data: displayData.map((point) => point.totalCalls),
+                          color: "#1976d2",
+                        },
+                      ]}
+                    />
+                    </CardContent>
+                  </Card>
 
-                <LineChart
-                  width={900}
-                  height={400}
-                  margin={{ top: 20, right: 60, bottom: 100, left: 60 }}
-                  xAxis={[
-                    {
-                      scaleType: "band",
-                      data: displayData.map((point) => point.period),
-                      label: "Period",
-                      tickLabelPlacement: "middle",
-                      tickPlacement: "end",
-                    },
-                  ]}
-                  yAxis={[
-                    {
-                      label: "Tokens Consumed",
-                      min: 0,
-                    },
-                  ]}
-                  series={[
-                    {
-                      label: "Tokens Consumed vs. Period",
-                      data: displayData.map((point) => point.tokensConsumed),
-                      color: "yellow",
-                    },
-                  ]}
-                />
+                  <Card>
+                    <CardHeader title="Tokens Consumed" />
+                    <CardContent>
+                    <LineChart
+                      width={900}
+                      height={400}
+                      margin={{ top: 20, right: 60, bottom: 100, left: 60 }}
+                      xAxis={[
+                        {
+                          scaleType: "band",
+                          data: displayData.map((point) => point.period),
+                          label: "Period",
+                          tickLabelPlacement: "middle",
+                          tickPlacement: "end",
+                        },
+                      ]}
+                      yAxis={[
+                        {
+                          label: "Tokens Consumed",
+                          min: 0,
+                        },
+                      ]}
+                      series={[
+                        {
+                          label: "Tokens Consumed vs. Period",
+                          data: displayData.map((point) => point.tokensConsumed),
+                          color: "yellow",
+                        },
+                      ]}
+                    />
+                    </CardContent>
+                  </Card>
 
-                <LineChart
-                  width={900}
-                  height={400}
-                  margin={{ top: 20, right: 60, bottom: 100, left: 60 }}
-                  xAxis={[
-                    {
-                      scaleType: "band",
-                      data: displayData.map((point) => point.period),
-                      label: "Period",
-                      tickLabelPlacement: "middle",
-                      tickPlacement: "end",
-                    },
-                  ]}
-                  yAxis={[
-                    {
-                      label: "Estimated Cost ($)",
-                      min: 0,
-                    },
-                  ]}
-                  series={[
-                    {
-                      label: "Estimated Cost ($) vs. Period",
-                      data: displayData.map((point) => point.estimatedCost),
-                      color: "orange",
-                    },
-                  ]}
-                />
+                  <Card>
+                    <CardHeader title="Estimated Cost" />
+                    <CardContent>
+                      <LineChart
+                        width={900}
+                        height={400}
+                        margin={{
+                          top: 20,
+                          right: 60,
+                          bottom: 100,
+                          left: 60,
+                        }}
+                        xAxis={[
+                          {
+                            scaleType: "band",
+                            data: displayData.map((p) => p.period),
+                            label: "Period",
+                            tickLabelPlacement: "middle",
+                            tickPlacement: "end",
+                          },
+                        ]}
+                        yAxis={[
+                          {
+                            label: "Estimated Cost ($)",
+                            min: 0,
+                          },
+                        ]}
+                        series={[
+                          {
+                            label: "Estimated Cost ($) vs. Period",
+                            data: displayData.map((p) => p.estimatedCost),
+                            color: "orange",
+                          },
+                        ]}
+                      />
+                    </CardContent>
+                  </Card>
 
-                <BarChart
-                  width={900}
-                  height={400}
-                  margin={{ top: 20, right: 60, bottom: 100, left: 60 }}
-                  xAxis={[
-                    {
-                      scaleType: "band",
-                      data: displayData.map((point) => point.period),
-                      label: "Period",
-                      tickLabelPlacement: "middle",
-                      tickPlacement: "end",
-                    },
-                  ]}
-                  yAxis={[
-                    {
-                      label: "Top Models",
-                      min: 0,
-                    },
-                  ]}
-                  series={topModelSeries}
-                />
-                </div>
+                  <Card>
+                    <CardHeader title="Top Models Usage Over Time" />
+                    <CardContent>
+                      <BarChart
+                        width={900}
+                        height={400}
+                        margin={{
+                          top: 20,
+                          right: 60,
+                          bottom: 100,
+                          left: 60,
+                        }}
+                        xAxis={[
+                          {
+                            scaleType: "band",
+                            data: displayData.map((p) => p.period),
+                            label: "Period",
+                            tickLabelPlacement: "middle",
+                            tickPlacement: "end",
+                          },
+                        ]}
+                        yAxis={[
+                          {
+                            label: "Top Models",
+                            min: 0,
+                          },
+                        ]}
+                        series={topModelSeries}
+                      />
+                    </CardContent>
+                  </Card>
+                </>
               )}
             </Box>
           )}
-
-          {error && !loading && (
-            <Typography color="error" sx={{ my: 2 }}>
-              Error: There was a problem getting the usage data
-            </Typography>
-          )}
-
-          <Button variant="contained" type="submit" disabled={loading}>
-            {loading ? "Loading…" : "Submit"}
-          </Button>
-        </form>
-
-      {!error && !loading && data && (
-        <Accordion sx={{ mt: 3 }}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography variant="subtitle1" fontWeight={600}>
-              Raw Data
-            </Typography>
-          </AccordionSummary>
-
-          <AccordionDetails>
-            <pre style={{ margin: 0, whiteSpace: "pre-wrap" }}>
-              <code>{JSON.stringify(data, null, 4)}</code>
-            </pre>
-          </AccordionDetails>
-        </Accordion>
-      )}
-
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </div>
   );
 
 }
