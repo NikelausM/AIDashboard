@@ -40,6 +40,7 @@ namespace AIBackendAPI.Common
             {
                 int yearNum = now.Year;
                 string period = $"year-{yearNum}-week-{week}";
+                double trendMultiplier = 1.0 + (week * 0.02);
 
                 foreach (var teamId in teamIds)
                 {
@@ -51,9 +52,9 @@ namespace AIBackendAPI.Common
                     int tokensB = callsB * rng.Next(300, 1500);
                     int tokensC = callsC * rng.Next(200, 1000);
 
-                    double costA = tokensA * modelA.CostPerToken;
-                    double costB = tokensB * modelB.CostPerToken;
-                    double costC = tokensC * modelC.CostPerToken;
+                    double costA = tokensA * modelA.CostPerToken * trendMultiplier;
+                    double costB = tokensB * modelB.CostPerToken * trendMultiplier;
+                    double costC = tokensC * modelC.CostPerToken * trendMultiplier;
 
                     var teamTopModels = new List<TopAIModel>
                     {

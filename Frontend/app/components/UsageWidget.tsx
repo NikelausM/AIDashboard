@@ -94,6 +94,41 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
     }
   }
 
+  /**
+   * Calculates the trend line.
+   * 
+   * @param values The values
+   * @returns The trend line values.
+   */
+  function calculateTrendLine(values: number[]): number[] {
+    const n = values.length;
+    if (n === 0) {
+      return [];
+    }
+
+    const x = values.map((_, i) => i);
+    const y = values;
+
+    const sumX = x.reduce((a, b) => a + b, 0);
+    const sumY = y.reduce((a, b) => a + b, 0);
+    const sumXY = x.reduce((acc, xi, i) => acc + xi * y[i], 0);
+    const sumXX = x.reduce((acc, xi) => acc + xi * xi, 0);
+
+    const denominator = n * sumXX - sumX * sumX;
+    if (denominator === 0) {
+      return [...y];
+    }
+
+    const slope = (n * sumXY - sumX * sumY) / denominator;
+    const intercept = (sumY - slope * sumX) / n;
+
+    return x.map((xi) => slope * xi + intercept);
+  }
+
+  const estimatedCosts = filteredUsage.map(entry => entry.estimatedCost);
+  const estimatedCostTrendLineValues = calculateTrendLine(estimatedCosts);
+  const minAllEstimatedCostValues = Math.min(...estimatedCosts, ...estimatedCostTrendLineValues);
+
   const uniqueTopModelNames = Array.from(
     new Set(
       filteredUsage.flatMap((entry) =>
@@ -374,15 +409,30 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
                     ]}
                     yAxis={[
                       {
+                        id: "cost",
                         label: "Estimated Cost ($)",
-                        min: 0,
+                        min: minAllEstimatedCostValues
                       },
+                      { 
+                        id: "trend", 
+                        label: "Trend", 
+                        min: minAllEstimatedCostValues
+                      }
                     ]}
                     series={[
                       {
                         label: "Estimated Cost ($) vs. Period",
+                        yAxisId: "cost",
                         data: displayData.map((p) => p.estimatedCost),
                         color: "orange",
+                      },
+                      {
+                        label: "Estimated Cost Trend",
+                        yAxisId: "trend",
+                        data: estimatedCostTrendLineValues,
+                        color: "red",
+                        curve: "linear",
+                        showMark: false,
                       },
                     ]}
                   />
