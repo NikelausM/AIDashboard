@@ -80,7 +80,7 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
             </Box>
           )}
 
-          {data && !loading && (
+          {data && !error && !loading && (
             <Box sx={{ mt: 4 }}>
               {scatterPoints.length === 0 ? (
                 <Typography
@@ -119,7 +119,7 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
             </Box>
           )}
 
-          {error && (
+          {error && !loading && (
             <Typography color="error" sx={{ my: 2 }}>
               Error: There was a problem getting the usage data
             </Typography>
@@ -130,7 +130,7 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
           </Button>
         </form>
 
-      {!error && data && (
+      {!error && !loading && data && (
         <Accordion sx={{ mt: 3 }}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography variant="subtitle1" fontWeight={600}>
