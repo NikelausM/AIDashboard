@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import { AI_BACKEND_API_BASE_URL } from "~/constants/urls";
-import { AggregatePeriod, enumAggregatePeriodsArray, enumAggregatePeriodsStringArray, type Usage } from "../../types/Usage";
+import { AggregatePeriod, enumAggregatePeriodsStringArray, type Usage } from "../../types/Usage";
 import { CardContent, Divider, Card, CardHeader, TextField, AccordionDetails, AccordionSummary, Accordion, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, Select, MenuItem } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { getPeriodDescription } from "~/utils/dataUtils";
@@ -94,6 +94,29 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
     }
   }
 
+  const uniqueTopModelNames = Array.from(
+    new Set(
+      filteredUsage.flatMap((entry) =>
+        entry.topModels.map((model) => model.name)
+      )
+    )
+  );
+
+  function getPrimaryColors(count: number): string[] {
+    const colors: string[] = [];
+
+    for (let i = 0; i < count; i++) {
+      const hue = Math.round((360 / count) * i);
+      colors.push(`hsl(${hue}, 90%, 50%)`);
+    }
+
+    return colors;
+  }
+
+  const topModelColors: Record<string, string> = {};
+
+  const palette = getPrimaryColors(uniqueTopModelNames.length);
+
   const displayData =
     filteredUsage?.map((entry, index) => ({
       id: index,
@@ -104,6 +127,14 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
       topModels: entry.topModels,
       period: getPeriodDescription(entry.period),
     })) ?? [];
+
+  const topModelSeries = uniqueTopModelNames.map((name, index) => {
+    return {
+      label: `${name} vs. Period`,
+      data: displayData.map((point) => point.topModels.filter(entry => entry.name === name)[0].calls),
+      color: topModelColors[name] = palette[index],
+    }
+  });
 
   return (
     <Card sx={{ width: "100%", maxWidth: 1100, mx: "auto", p: 2 }}>
@@ -291,7 +322,7 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
                   ]}
                 />
 
-                <LineChart
+                <BarChart
                   width={900}
                   height={400}
                   margin={{ top: 20, right: 60, bottom: 100, left: 60 }}
@@ -310,23 +341,7 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
                       min: 0,
                     },
                   ]}
-                  series={[
-                    {
-                      label: "Top Model 1 vs. Period",
-                      data: displayData.map((point) => point.topModels[0].calls),
-                      color: "blue",
-                    },
-                    {
-                      label: "Top Model 2 vs. Period",
-                      data: displayData.map((point) => point.topModels[1].calls),
-                      color: "green",
-                    },
-                    {
-                      label: "Top Model 3 vs. Period",
-                      data: displayData.map((point) => point.topModels[2].calls),
-                      color: "yellow",
-                    },
-                  ]}
+                  series={topModelSeries}
                 />
                 </div>
               )}
