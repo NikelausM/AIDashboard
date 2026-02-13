@@ -24,14 +24,24 @@ namespace AIBackendAPI.Common
             Models.Add(modelC);
 
             long[] teamIds = [101, 202, 303];
-            string[] periods = ["last_7_days", "last_month", "last_3_months", "last_year"];
 
             long topId = 1;
             long usageId = 1;
 
+            int totalWeeks = 52;
+            var weeklyUsages = new Dictionary<long, List<Usage>>();
+
             foreach (var teamId in teamIds)
             {
-                foreach (var period in periods)
+                weeklyUsages[teamId] = [];
+            }
+
+            for (int week = 1; week <= totalWeeks; week++)
+            {
+                int yearNum = now.Year;
+                string period = $"year-{yearNum}-week-{week}";
+
+                foreach (var teamId in teamIds)
                 {
                     int callsA = rng.Next(5, 15);
                     int callsB = rng.Next(3, 10);
@@ -78,7 +88,7 @@ namespace AIBackendAPI.Common
 
                     TopModels.AddRange(teamTopModels);
 
-                    UsageData.Add(new Usage
+                    var usage = new Usage
                     {
                         Id = usageId++,
                         TeamId = teamId,
@@ -88,11 +98,65 @@ namespace AIBackendAPI.Common
                         Period = period,
                         DateCreated = now,
                         TopModels = teamTopModels
+                    };
+
+                    UsageData.Add(usage);
+                    weeklyUsages[teamId].Add(usage);
+                }
+            }
+
+            string[] aggregatePeriods = ["last_7_days", "last_month", "last_3_months", "last_year"];
+            int[] weekCounts = [1, 4, 12, 52];
+
+            foreach (var teamId in teamIds)
+            {
+                var teamWeeks = weeklyUsages[teamId];
+
+                for (int i = 0; i < aggregatePeriods.Length; i++)
+                {
+                    string period = aggregatePeriods[i];
+                    int weeksToInclude = weekCounts[i];
+
+                    var selectedWeeks = teamWeeks.TakeLast(weeksToInclude).ToList();
+
+                    int totalCalls = selectedWeeks.Sum(week => week.TotalCalls);
+                    int totalTokens = selectedWeeks.Sum(week => week.TokensConsumed);
+                    double totalCost = selectedWeeks.Sum(week => week.EstimatedCost);
+
+                    var aggregatedTopModels = selectedWeeks
+                        .SelectMany(usage => usage.TopModels)
+                        .GroupBy(topAIModel => topAIModel.AIModelId)
+                        .Select(group => new TopAIModel
+                        {
+                            Id = topId++,
+                            TeamId = teamId,
+                            Calls = group.Sum(topAIModel => topAIModel.Calls),
+                            DateCreated = now,
+                            Period = period,
+                            AIModelId = group.First().AIModelId,
+                            AIModel = group.First().AIModel
+                        })
+                        .ToList();
+
+                    TopModels.AddRange(aggregatedTopModels);
+
+                    UsageData.Add(new Usage
+                    {
+                        Id = usageId++,
+                        TeamId = teamId,
+                        TotalCalls = totalCalls,
+                        TokensConsumed = totalTokens,
+                        EstimatedCost = totalCost,
+                        Period = period,
+                        DateCreated = now,
+                        TopModels = aggregatedTopModels
                     });
                 }
             }
 
-            return new Tuple<IList<AIModel>, IList<AIModelCall>, IList<TopAIModel>, IList<Usage>>(Models, ModelCalls, TopModels, UsageData);
+            return new Tuple<IList<AIModel>, IList<AIModelCall>, IList<TopAIModel>, IList<Usage>>(
+                Models, ModelCalls, TopModels, UsageData
+            );
         }
     }
 }

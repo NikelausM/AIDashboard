@@ -7,10 +7,10 @@ export interface Usage {
     name: string,
     calls: number
   ],
-  period: Period
+  period: AggregatePeriod | string
 }
 
-export enum Period {
+export enum AggregatePeriod {
   Last7Days = "last_7_days",
   LastMonth = "last_month",
   Last3Months = "last_3_months",
@@ -18,16 +18,6 @@ export enum Period {
   All = "all"
 }
 
-export function isPeriod(value: unknown): value is Period {
-  console.log("value: ", value);
-  console.log(Object.values(Period))
-  return Object.values(Period).includes(value as Period);
-}
-
-export const periodTypeToDescriptionMap = {
-  [Period.Last7Days]: "Last 7 Days",
-  [Period.LastMonth]: "Last Month",
-  [Period.Last3Months]: "Last 3 Months",
-  [Period.LastYear]: "Last Year",
-  [Period.All]: "All Time",
+export function isAggregatePeriod(value: unknown): value is AggregatePeriod {
+  return Object.values(AggregatePeriod).includes(value as AggregatePeriod);
 }

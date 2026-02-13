@@ -4,10 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using AIBackendAPI.Data.Models;
 using AIBackendAPI.Services;
 using AIBackendAPI.Data.Dto;
-using AIBackendAPI.Common.Constants;
 
 namespace AIBackendAPI.Controllers
 {
@@ -22,10 +20,6 @@ namespace AIBackendAPI.Controllers
         [HttpGet("{teamId}")]
         public async Task<ActionResult<IEnumerable<UsageDto>>> GetUsage(long teamId)
         {
-            // if (!PeriodConstants.AllConstants.Contains(period))
-            // {
-            //     return BadRequest("period is required. Valid periods include: " + string.Join(",", PeriodConstants.AllConstants));
-            // }
             var usages = await _usageService.GetUsageAsync(teamId);
             var usageDtos = usages.Select(_usageService.CreateUsageDto).ToList();
             return usageDtos;
