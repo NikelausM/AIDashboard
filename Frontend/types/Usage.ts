@@ -15,9 +15,12 @@ export enum AggregatePeriod {
   LastMonth = "last_month",
   Last3Months = "last_3_months",
   LastYear = "last_year",
-  All = "all"
 }
 
+export const enumAggregatePeriodsArray = Object.values(AggregatePeriod);
+
+export const enumAggregatePeriodsStringArray = Object.values(AggregatePeriod).map(val => val.toString());
+
 export function isAggregatePeriod(value: unknown): value is AggregatePeriod {
-  return Object.values(AggregatePeriod).includes(value as AggregatePeriod);
+  return enumAggregatePeriodsArray.includes(value as AggregatePeriod);
 }

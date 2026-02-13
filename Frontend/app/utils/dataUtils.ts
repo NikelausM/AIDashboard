@@ -5,7 +5,6 @@ const aggregatePeriodTypeToDescriptionMap = {
   [AggregatePeriod.LastMonth]: "Last Month",
   [AggregatePeriod.Last3Months]: "Last 3 Months",
   [AggregatePeriod.LastYear]: "Last Year",
-  [AggregatePeriod.All]: "All Time",
 }
 
 export function getPeriodDescription(periodCode: string) {

@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import { AI_BACKEND_API_BASE_URL } from "~/constants/urls";
-import { AggregatePeriod, type Usage } from "../../types/Usage";
+import { AggregatePeriod, enumAggregatePeriodsArray, enumAggregatePeriodsStringArray, type Usage } from "../../types/Usage";
 import { CardContent, Divider, Card, CardHeader, TextField, AccordionDetails, AccordionSummary, Accordion, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, Select, MenuItem } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { getPeriodDescription } from "~/utils/dataUtils";
@@ -16,11 +16,12 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
   const [data, setData] = React.useState<Usage[] | null>(initialUsageData ?? null);
   const [error, setError] = React.useState<string | null>(null);
 
-  const [periodMode, setPeriodMode] = React.useState<
+  const [periodType, setPeriodType] = React.useState<
     "aggregate" | "range"
   >("aggregate");
-  const [startWeek, setStartWeek] = React.useState("");
-  const [endWeek, setEndWeek] = React.useState("");
+  const initialWeekUsageData = data?.filter(entry => !enumAggregatePeriodsStringArray.includes(entry.period));
+  const [startWeek, setStartWeek] = React.useState(initialWeekUsageData ? initialWeekUsageData[0].period : "");
+  const [endWeek, setEndWeek] = React.useState(initialWeekUsageData ? initialWeekUsageData[initialWeekUsageData.length - 1].period : "");
 
   const handleSubmit = async (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -64,7 +65,7 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
 
   let filteredUsage: Usage[] = data ?? [];
 
-  if (periodMode === "aggregate") {
+  if (periodType === "aggregate") {
     filteredUsage = filteredUsage.filter((usageEntry) =>
       [AggregatePeriod.Last7Days, AggregatePeriod.LastMonth, AggregatePeriod.Last3Months, AggregatePeriod.LastYear]
         .map(val => val.toString())
@@ -74,7 +75,7 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
     );
   }
 
-  if (periodMode === "range" && startWeek && endWeek) {
+  if (periodType === "range" && startWeek && endWeek) {
     const startIndex = filteredUsage.findIndex(
       (entry) => entry.period === startWeek
     );
@@ -127,9 +128,9 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
               <FormLabel>Select Period Type</FormLabel>
               <RadioGroup
                 row
-                value={periodMode}
+                value={periodType}
                 onChange={(e) =>
-                  setPeriodMode(e.target.value as "aggregate" | "range")
+                  setPeriodType(e.target.value as "aggregate" | "range")
                 }
               >
                 <FormControlLabel
@@ -146,7 +147,7 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
             </FormControl>
           </Box>
 
-          {periodMode === "range" && (
+          {periodType === "range" && (
             <Box sx={{ display: "flex", gap: 3, mb: 3 }}>
               <FormControl sx={{ width: 200 }}>
                 <FormLabel>Start Week</FormLabel>
