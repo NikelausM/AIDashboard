@@ -130,7 +130,7 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
 
   const topModelSeries = uniqueTopModelNames.map((name, index) => {
     return {
-      label: `${name} vs. Period`,
+      label: name,
       data: displayData.map((point) => point.topModels.filter(entry => entry.name === name)[0].calls),
       color: topModelColors[name] = palette[index],
     }
