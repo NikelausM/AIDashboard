@@ -101,6 +101,7 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
       totalCalls: entry.totalCalls,
       tokensConsumed: entry.tokensConsumed,
       estimatedCost: entry.estimatedCost,
+      topModels: entry.topModels,
       period: getPeriodDescription(entry.period),
     })) ?? [];
 
@@ -257,7 +258,7 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
                     {
                       label: "Tokens Consumed vs. Period",
                       data: displayData.map((point) => point.tokensConsumed),
-                      color: "orange",
+                      color: "yellow",
                     },
                   ]}
                 />
@@ -286,6 +287,44 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
                       label: "Estimated Cost ($) vs. Period",
                       data: displayData.map((point) => point.estimatedCost),
                       color: "orange",
+                    },
+                  ]}
+                />
+
+                <LineChart
+                  width={900}
+                  height={400}
+                  margin={{ top: 20, right: 60, bottom: 100, left: 60 }}
+                  xAxis={[
+                    {
+                      scaleType: "band",
+                      data: displayData.map((point) => point.period),
+                      label: "Period",
+                      tickLabelPlacement: "middle",
+                      tickPlacement: "end",
+                    },
+                  ]}
+                  yAxis={[
+                    {
+                      label: "Top Models",
+                      min: 0,
+                    },
+                  ]}
+                  series={[
+                    {
+                      label: "Top Model 1 vs. Period",
+                      data: displayData.map((point) => point.topModels[0].calls),
+                      color: "blue",
+                    },
+                    {
+                      label: "Top Model 2 vs. Period",
+                      data: displayData.map((point) => point.topModels[1].calls),
+                      color: "green",
+                    },
+                    {
+                      label: "Top Model 3 vs. Period",
+                      data: displayData.map((point) => point.topModels[2].calls),
+                      color: "yellow",
                     },
                   ]}
                 />

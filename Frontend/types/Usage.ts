@@ -3,10 +3,11 @@ export interface Usage {
   totalCalls: number,
   tokensConsumed: number,
   estimatedCost: number,
-  topModels: [
+  topModels:
+  {
     name: string,
     calls: number
-  ],
+  }[],
   period: AggregatePeriod | string
 }
 
