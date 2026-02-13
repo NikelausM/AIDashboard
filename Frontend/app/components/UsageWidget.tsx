@@ -274,6 +274,30 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
             </Typography>
           ) : (
             <>
+              <Card sx={{ gridColumn: "1 / -1" }}>
+                <CardHeader title="Top Models Usage Over Time" />
+                <CardContent>
+                  <BarChart
+                    xAxis={[
+                      {
+                        scaleType: "band",
+                        data: displayData.map((p) => p.period),
+                        label: "Period",
+                        tickLabelPlacement: "middle",
+                        tickPlacement: "end",
+                      },
+                    ]}
+                    yAxis={[
+                      {
+                        label: "Calls",
+                        min: 0,
+                      },
+                    ]}
+                    series={topModelSeries}
+                  />
+                </CardContent>
+              </Card>
+
               <Card>
                 <CardHeader title="Total Calls" />
                 <CardContent>
@@ -360,30 +384,6 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
                         color: "orange",
                       },
                     ]}
-                  />
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader title="Top Models Usage Over Time" />
-                <CardContent>
-                  <BarChart
-                    xAxis={[
-                      {
-                        scaleType: "band",
-                        data: displayData.map((p) => p.period),
-                        label: "Period",
-                        tickLabelPlacement: "middle",
-                        tickPlacement: "end",
-                      },
-                    ]}
-                    yAxis={[
-                      {
-                        label: "Top Models",
-                        min: 0,
-                      },
-                    ]}
-                    series={topModelSeries}
                   />
                 </CardContent>
               </Card>
