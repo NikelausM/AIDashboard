@@ -62,7 +62,7 @@ For this project, the application uses the EF Core InMemory database provider. T
 - Data is not persisted — it disappears when the application stops
 - It lacks the robustness and reliability of production‑grade providers such as SQL Server or PostgreSQL
 
-### Future Improvements
+### Future Improvements for Backend
 
 With more time, a more realistic setup could include:
 
