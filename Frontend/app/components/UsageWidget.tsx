@@ -180,6 +180,7 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
       <Card sx={{ width: "100%", mb: 4 }}>
         <CardHeader
           title="Usage Metrics"
+          aria-label="Usage"
           subheader="View API usage by team"
           sx={{ pb: 0 }}
         />
@@ -191,6 +192,7 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
             <TextField
               id="teamId"
               label="Team ID"
+              aria-label="Team ID"
               variant="filled"
               value={teamId}
               onChange={(e) => setTeamId(e.target.value as string)}
@@ -202,10 +204,11 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
 
             <Box sx={{ mb: 2 }}>
               <FormControl sx={{ mb: 3 }}>
-                <FormLabel>Select Period Type</FormLabel>
+                <FormLabel id="period-type-label">Select Period Type</FormLabel>
                 <RadioGroup
                   row
                   value={periodType}
+                  aria-labelledby="period-type-label"
                   onChange={(e) =>
                     setPeriodType(e.target.value as "aggregate" | "range")
                   }
@@ -214,11 +217,13 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
                     value="aggregate"
                     control={<Radio />}
                     label="Aggregate Period"
+                    aria-label="Aggregate period"
                   />
                   <FormControlLabel
                     value="range"
                     control={<Radio />}
                     label="Date Range"
+                    aria-label="Date range"
                   />
                 </RadioGroup>
               </FormControl>
@@ -227,9 +232,10 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
             {periodType === "range" && (
               <Box sx={{ display: "flex", gap: 3, mb: 3 }}>
                 <FormControl sx={{ width: 200 }}>
-                  <FormLabel>Start Week</FormLabel>
+                  <FormLabel id="start-week-label">Start Week</FormLabel>
                   <Select
                     value={startWeek}
+                    aria-labelledby="start-week-label"
                     onChange={(e) => setStartWeek(e.target.value)}
                     displayEmpty
                   >
@@ -245,9 +251,10 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
                 </FormControl>
 
                 <FormControl sx={{ width: 200 }}>
-                  <FormLabel>End Week</FormLabel>
+                  <FormLabel id="end-week-label">End Week</FormLabel>
                   <Select
                     value={endWeek}
+                    aria-labelledby="end-week-label"
                     onChange={(e) => setEndWeek(e.target.value)}
                     displayEmpty
                   >
@@ -276,20 +283,23 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
               </Typography>
             )}
 
-            <Button variant="contained" type="submit" disabled={loading}>
+            <Button variant="contained" type="submit" disabled={loading} aria-label="Submit form info and load usage data">
               {loading ? "Loading…" : "Submit"}
             </Button>
           </form>
 
           {!error && !loading && data && (
             <Accordion sx={{ mt: 3 }}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <AccordionSummary 
+                expandIcon={<ExpandMoreIcon />} 
+                id="raw-data-header"
+                aria-controls="raw-data-content">
                 <Typography variant="subtitle1" fontWeight={600}>
                   Raw Data
                 </Typography>
               </AccordionSummary>
 
-              <AccordionDetails>
+              <AccordionDetails id="raw-data-content">
                 <pre style={{ margin: 0, whiteSpace: "pre-wrap" }}>
                   <code>{JSON.stringify(data, null, 4)}</code>
                 </pre>
@@ -336,6 +346,7 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
                         min: 0,
                       },
                     ]}
+                    aria-label="Top models usage over time"
                     series={topModelSeries}
                   />
                 </CardContent>
@@ -360,6 +371,7 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
                       min: 0,
                     },
                   ]}
+                  aria-label="Total calls"
                   series={[
                     {
                       label: "Total Calls",
@@ -390,6 +402,7 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
                         min: 0,
                       },
                     ]}
+                    aria-label="Tokens consumed"
                     series={[
                       {
                         label: "Tokens Consumed",
@@ -426,6 +439,7 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
                         min: minAllEstimatedCostValues
                       }
                     ]}
+                    aria-label="Estimated cost"
                     series={[
                       {
                         label: "Estimated Cost ($)",
