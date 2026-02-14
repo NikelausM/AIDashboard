@@ -66,7 +66,7 @@ Some reasons why MUI was chosen include:
 ### Accessibility Considerations
 
 The chart color palette was intentionally curated to meet WCAG 2.1 AA contrast requirements in both dark and light mode, verified using the WebAIM Contrast Checker:
-<https://webaim.org/resources/contrastchecker>.
+<https://webaim.org/resources/contrastchecker>. No accessibility issues were found with Axe Devtools accessibility scans either.
 This ensures the dashboard is usable for individuals with visual impairments or color‑vision deficiencies.
 
 ### Future Improvements for Frontend
