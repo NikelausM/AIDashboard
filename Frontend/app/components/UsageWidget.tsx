@@ -137,7 +137,7 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
     )
   );
 
-  const colorPalette = ["#00bf7d", "#00b4c5", "#0073e6", "#E6308A", "#9b8bf4"]
+  const colorPalette = ["#0073e6", "#e6308A", "#009eb0", "#c44601", "#029356" ]
 
   function getPaletteColorsForLength(length: number, colorPalette: string[]): string[] {
     const colors: string[] = [];
@@ -196,10 +196,7 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
               onChange={(e) => setTeamId(e.target.value as string)}
               sx={{ 
                 mb: 2, 
-                width: 200,  
-                // "& .MuiFilledInput-root": {
-                //   backgroundColor: "green",
-                // },
+                width: 200,
               }}
             />
 
@@ -365,7 +362,7 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
                   ]}
                   series={[
                     {
-                      label: "Total Calls vs. Period",
+                      label: "Total Calls",
                       data: displayData.map((point) => point.totalCalls),
                       color: colorPalette[colorPalette.length % colorPaletteIdx++],
                     },
@@ -395,9 +392,9 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
                     ]}
                     series={[
                       {
-                        label: "Tokens Consumed vs. Period",
+                        label: "Tokens Consumed",
                         data: displayData.map((point) => point.tokensConsumed),
-                        color: colorPalette[colorPalette.length % colorPaletteIdx++],
+                        color: colorPalette[1],
                       },
                     ]}
                   />
@@ -431,16 +428,16 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
                     ]}
                     series={[
                       {
-                        label: "Estimated Cost ($) vs. Period",
+                        label: "Estimated Cost ($)",
                         yAxisId: "cost",
                         data: displayData.map((p) => p.estimatedCost),
-                        color: colorPalette[colorPalette.length % colorPaletteIdx++],
+                        color: colorPalette[0],
                       },
                       {
                         label: "Estimated Cost Trend",
                         yAxisId: "trend",
                         data: estimatedCostTrendLineValues,
-                        color: colorPalette[colorPalette.length % colorPaletteIdx++],
+                        color: colorPalette[3],
                         curve: "linear",
                         showMark: false,
                       },
