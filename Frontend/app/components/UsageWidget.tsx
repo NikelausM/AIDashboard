@@ -236,7 +236,7 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
             />
 
             <Box sx={{ mb: 2 }}>
-              <FormControl sx={{ mb: 3 }}>
+              <FormControl>
                 <FormLabel id="period-type-label">Select Period Type</FormLabel>
                 <RadioGroup
                   row
@@ -320,25 +320,6 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
               {loading ? "Loading…" : "Submit"}
             </Button>
           </form>
-
-          {!error && !loading && data && (
-            <Accordion sx={{ mt: 3 }}>
-              <AccordionSummary 
-                expandIcon={<ExpandMoreIcon />} 
-                id="raw-data-header"
-                aria-controls="raw-data-content">
-                <Typography variant="subtitle1" fontWeight={600}>
-                  Raw Data
-                </Typography>
-              </AccordionSummary>
-
-              <AccordionDetails id="raw-data-content">
-                <pre style={{ margin: 0, whiteSpace: "pre-wrap" }}>
-                  <code>{JSON.stringify(data, null, 4)}</code>
-                </pre>
-              </AccordionDetails>
-            </Accordion>
-          )}
         </Box>
       </Card>
 
