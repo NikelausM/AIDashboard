@@ -38,13 +38,15 @@ dotnet run .
 
 ### Instructions to Run ASP.Net Core Web API Tests
 
+This web API requires .NET 10.
+
 Open root folder (e.g., AIDashboard) and in the console run:
 
 ```bash
 dotnet test
 ```
 
-Open AIBackendAPI.Tests folder in VSCode.
+Or open AIBackendAPI.Tests folder in VSCode.
 
 In VSCode do: ```Run > Start Debugging``` OR ```Run > Start Without Debugging```.
 
@@ -62,7 +64,7 @@ For this project, the application uses the EF Core InMemory database provider. T
 - Data is not persisted — it disappears when the application stops
 - It lacks the robustness and reliability of production‑grade providers such as SQL Server or PostgreSQL
 
-### Future Improvements for Backend
+### Future Improvements for Database Layer
 
 With more time, a more realistic setup could include:
 
@@ -88,8 +90,6 @@ Some reasons why MUI was chosen include:
 - A rich ecosystem including MUI X Charts, used for the data visualizations
 
 ### Instructions to Run Frontend
-
-This web API requires .NET 10.
 
 Open Frontend in VSCode.
 
