@@ -89,6 +89,8 @@ Some reasons why MUI was chosen include:
 
 ### Instructions to Run Frontend
 
+This web API requires .NET 10.
+
 Open Frontend in VSCode.
 
 In the console run:
