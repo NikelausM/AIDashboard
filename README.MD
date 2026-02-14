@@ -20,7 +20,7 @@ Some trade-offs of this framework include:
 - ASP.NET Core is more opinionated than lightweight frameworks such as Express.js or Flask, meaning less customization, though this may also be viewed as beneficial depending on preference and use case.
 - Other frameworks, in particular Node‑based frameworks can be more efficient for handling large volumes of concurrent asynchronous requests, which may be beneficial for high‑traffic real‑time systems.
 
-### Future Improvements and Scalability Consideration
+### Future Improvements for Backend
 
 If this API were deployed in a production environment with heavy usage, it would likely benefit from a load balancer to distribute asynchronous network traffic across multiple backend instances.
 
@@ -69,11 +69,17 @@ The chart color palette was intentionally curated to meet WCAG 2.1 AA contrast r
 <https://webaim.org/resources/contrastchecker>.
 This ensures the dashboard is usable for individuals with visual impairments or color‑vision deficiencies.
 
+### Future Improvements for Frontend
+
+A fronteend client API to interact with the backend API, which utilizes a cache to store recent data.
+
 ## 🧠 Assumptions
 
 This project makes several assumptions to keep the scope manageable:
 
 - Data volume is moderate, suitable for in‑memory storage in a demo context.
+- The database tables are already populated.
+  - Probably by some weekly Quartz scheduled task that inserts data for each weekly period (i.e., $"year-{yearNum}-week-{week}"), and updates the aggregate period entries (i.e., last 7 days, last month, last 3 months, last year)
 - The dashboard is primarily informational, not requiring real‑time updates or streaming.
 - Users access the dashboard via modern browsers that support ES6+ and CSS Grid.
 - Accessibility is a priority, so color choices and component structure follow WCAG guidelines.
