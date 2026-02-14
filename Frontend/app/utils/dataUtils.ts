@@ -15,7 +15,7 @@ export function getPeriodDescription(periodCode: string) {
   } else if (/^year-\d+-week-\d+$/.test(periodCode)) {
     const parts = periodCode.split("-");
     const yearNumber = parts[1];
-    const weekNumber = parts[parts.length - 1]; // safe, correct
+    const weekNumber = parts[parts.length - 1];
     description = `Year ${yearNumber}, Week ${weekNumber}`
   } else {
     description = periodCode;
@@ -31,7 +31,7 @@ export function getShortPeriodDescription(periodCode: string) {
     description = aggregatePeriodTypeToDescriptionMap[periodCode];
   } else if (/^year-\d+-week-\d+$/.test(periodCode)) {
     const parts = periodCode.split("-");
-    const weekNumber = parts[parts.length - 1]; // safe, correct
+    const weekNumber = parts[parts.length - 1];
     description = weekNumber
   } else {
     description = periodCode;
