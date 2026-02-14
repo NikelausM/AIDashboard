@@ -24,9 +24,33 @@ Some trade-offs of this framework include:
 
 If this API were deployed in a production environment with heavy usage, it would likely benefit from a load balancer to distribute asynchronous network traffic across multiple backend instances.
 
+### Instructions to Run ASP.Net Core Web API
+
+Open AIBackendAPI folder in VSCode.
+
+In VSCode do: ```Run > Start Debugging``` OR ```Run > Start Without Debugging```.
+
+Or in console run:
+
+```bash
+dotnet run .
+```
+
+### Instructions to Run ASP.Net Core Web API Tests
+
+Open root folder (e.g., AIDashboard) and in the console run:
+
+```bash
+dotnet test
+```
+
+Open AIBackendAPI.Tests folder in VSCode.
+
+In VSCode do: ```Run > Start Debugging``` OR ```Run > Start Without Debugging```.
+
 ## 🗄️ Database Layer
 
-For this demo, the application uses the EF Core InMemory database provider. The reasons for this include:
+For this project, the application uses the EF Core InMemory database provider. The reasons for this include:
 
 - Little setup required
 - Fast and lightweight
@@ -62,6 +86,17 @@ Some reasons why MUI was chosen include:
 - Automatic support for light/dark mode
 - Strong accessibility focus — MUI is “Dedicated to accessibility”
 - A rich ecosystem including MUI X Charts, used for the data visualizations
+
+### Instructions to Run Frontend
+
+Open Frontend in VSCode.
+
+In the console run:
+
+```bash
+npm i
+npm run dev
+```
 
 ### Accessibility Considerations
 
