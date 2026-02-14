@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import { useLoaderData, type LoaderFunctionArgs } from 'react-router';
 import UsageWidget from '~/components/UsageWidget';
@@ -9,6 +8,7 @@ import { AppBar, CssBaseline, Divider, Drawer, List, ListItem, ListItemButton, L
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import SettingsIcon from '@mui/icons-material/Settings';
+import { aiUsageClient } from '~/root';
 
 export function meta() {
   return [
@@ -28,8 +28,8 @@ const initialTeamId = 101;
  * @returns The initial data for the page.
  */
 export async function loader(args: LoaderFunctionArgs): Promise<Usage[]> {
-  const response = await fetch(`${AI_BACKEND_API_BASE_URL}/${initialTeamId}`);
-  return response.json();
+  const usages = await aiUsageClient.getUsage(initialTeamId);
+  return usages;
 }
 
 export default function Home() {

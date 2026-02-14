@@ -13,6 +13,7 @@ import AppTheme from './theme';
 import createEmotionCache from './createCache';
 
 import type { Route } from './+types/root';
+import { AIUsageClient } from '../services/aiUsageClient';
 
 export const links: Route.LinksFunction = () => [
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -90,3 +91,5 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
     </Box>
   );
 }
+
+export const aiUsageClient = new AIUsageClient();

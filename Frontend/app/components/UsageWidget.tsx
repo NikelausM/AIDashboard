@@ -9,6 +9,7 @@ import { CardContent, Divider, Card, CardHeader, TextField, AccordionDetails, Ac
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { getPeriodDescription, getShortPeriodDescription } from "~/utils/dataUtils";
 import { BarChart, LineChart } from "@mui/x-charts";
+import { aiUsageClient } from "~/root";
 
 export default function UsageWidget({ initialTeamId, initialUsageData }: { initialTeamId?: number, initialUsageData?: Usage[] }) {
   const [teamId, setTeamId] = React.useState(initialTeamId ?? "");
@@ -32,13 +33,8 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
     const minDuration = 2000;
 
     try {
-      const response = await fetch(`${AI_BACKEND_API_BASE_URL}/${teamId}`);
-      if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
-      }
-
-      const json: Usage[] = await response.json();
-      setData(json);
+      const usages: Usage[] = await aiUsageClient.getUsage(Number(teamId));
+      setData(usages);
     } catch (err: any) {
       setError(err.message);
     } finally {

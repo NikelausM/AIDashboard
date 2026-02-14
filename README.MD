@@ -71,7 +71,7 @@ This ensures the dashboard is usable for individuals with visual impairments or 
 
 ### Future Improvements for Frontend
 
-A fronteend client API to interact with the backend API, which utilizes a cache to store recent data.
+More interactive navigation while using nav bars.
 
 ## 🧠 Assumptions
 
