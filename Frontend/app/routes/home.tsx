@@ -2,7 +2,6 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { useLoaderData, type LoaderFunctionArgs } from 'react-router';
 import UsageWidget from '~/components/UsageWidget';
-import { AI_BACKEND_API_BASE_URL } from '~/constants/urls';
 import { type Usage } from '../../types/Usage';
 import { AppBar, CssBaseline, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography } from '@mui/material';
 import DashboardIcon from '@mui/icons-material/Dashboard';
