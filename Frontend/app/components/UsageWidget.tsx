@@ -30,21 +30,18 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
   const [rangeError, setRangeError] = React.useState<string | null>(null);
 
   const handleStartWeekChange = (value: string) => {
-    console.log("change for start Week: ", value);
     setStartWeek(value);
     const valuesArray = value.split("-");
     setStartWeekIndex(Number(valuesArray[valuesArray.length - 1]));
   }
 
   const handleEndWeekChange = (value: string) => {
-    console.log("change for end Week: ", value);
     setEndWeek(value);
     const valuesArray = value.split("-");
     setEndWeekIndex(Number(valuesArray[valuesArray.length - 1]));
   }
 
   useEffect(() => {
-    console.log(startWeekIndex, endWeekIndex);
     if (periodType === "range" && (startWeekIndex == null || endWeekIndex == null || startWeekIndex >= endWeekIndex)) {
       setRangeError("Start week must be less than end week.");
     } else {
