@@ -325,7 +325,11 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
         <Box
           sx={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(450px, 1fr))",
+            gridTemplateColumns: {
+              xs: "1fr",
+              sm: "repeat(1, 1fr)",
+              xl: "repeat(3, 1fr)",
+            },
             gridAutoRows: "500px",
             gap: 4,
           }}
