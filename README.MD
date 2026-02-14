@@ -125,3 +125,8 @@ This project makes several assumptions to keep the scope manageable:
 ## 🚀 Conclusion
 
 This dashboard demonstrates a clean, maintainable, accessible, and responsive approach to visualizing AI usage metrics. The chosen technologies balance developer experience, performance, and clarity while keeping the setup simple for reviewers. With additional time, the architecture could be extended to include persistent production grade storage, authentication, real‑time updates, and more scalability.
+
+## Screenshots
+![alt text](image.png)
+![alt text](image-1.png)
+![alt text](image-2.png)
