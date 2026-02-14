@@ -11,9 +11,9 @@ namespace AIBackendAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsageController(UsageService usageService) : ControllerBase
+    public class UsageController(IUsageService usageService) : ControllerBase
     {
-        private readonly UsageService _usageService = usageService;
+        private readonly IUsageService _usageService = usageService;
 
         // GET: api/usage/5
         // auto validates teamId to ensure it is of type long (i.e., not a string or otherwise)

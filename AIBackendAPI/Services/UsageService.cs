@@ -4,7 +4,14 @@ using AIBackendAPI.Data.Repositories;
 
 namespace AIBackendAPI.Services
 {
-    public class UsageService(IUsageRepository usageRepository)
+    public interface IUsageService
+    {
+        public Task<IEnumerable<Usage>> GetUsageAsync(long teamId);
+        public TopAIModelDto CreateTopAIModelDto(TopAIModel topAIModel);
+        public UsageDto CreateUsageDto(Usage usage);
+    }
+
+    public class UsageService(IUsageRepository usageRepository) : IUsageService
     {
         private readonly IUsageRepository _usageRepository = usageRepository;
 

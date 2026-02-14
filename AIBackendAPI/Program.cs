@@ -14,7 +14,7 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddDbContext<UsageContext>(opt => opt.UseInMemoryDatabase("Usages"));
 builder.Services.AddScoped<IUsageRepository, UsageRepository>();
-builder.Services.AddScoped<UsageService>();
+builder.Services.AddScoped<IUsageService, UsageService>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
