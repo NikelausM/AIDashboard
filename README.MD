@@ -13,6 +13,8 @@ The backend is implemented using ASP.NET Core Web API, chosen for its robustness
 - A large, active community and long‑term support
 - A structure that naturally encourages clean, maintainable architecture
 
+The API has also been built with abstractions such as controllers, services, and repositories, as well as interfaces.
+
 ### ASP.NET Core Web API Trade‑offs
 
 Some trade-offs of this framework include:
@@ -22,7 +24,7 @@ Some trade-offs of this framework include:
 
 ### Future Improvements for Backend
 
-If this API were deployed in a production environment with heavy usage, it would likely benefit from a load balancer to distribute asynchronous network traffic across multiple backend instances.
+If this API were deployed in a production environment with heavy usage, it would likely benefit from horizontal scaling like a load balancer to distribute asynchronous network traffic across multiple backend instances. It could be further improved by using an in memory data store like Redis as a cache for the usage metric results.
 
 ### Instructions to Run ASP.Net Core Web API
 
@@ -84,10 +86,12 @@ Some reasons why React Router was chosen include:
 
 Some reasons why MUI was chosen include:
 
-- Clean, customizable, and modern UI components based on Google’s Material Design
+- Clean, customizable, and modern UI components based on Google's Material Design
 - Automatic support for light/dark mode
 - Strong accessibility focus — MUI is “Dedicated to accessibility”
 - A rich ecosystem including MUI X Charts, used for the data visualizations
+
+The frontend also uses an AIUsageClient (in aiUsageClient.ts) that abstracts the API fetch calls and caches results.
 
 ### Instructions to Run Frontend
 
@@ -108,7 +112,10 @@ This ensures the dashboard is usable for individuals with visual impairments or 
 
 ### Future Improvements for Frontend
 
-More interactive navigation while using nav bars.
+Although this demo runs entirely on a local development environment, a production deployment would benefit from using a Content Delivery Network (CDN) to serve the frontend's static assets. The CDN would allow for:
+
+- Faster load times by allowing users to download the React build files from a server geographically close to them.
+- Better caching since CDN edge nodes automatically cache some build artifacts like assets/*.js.
 
 ## 🧠 Assumptions
 
