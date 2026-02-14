@@ -137,12 +137,14 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
     )
   );
 
-  function getPrimaryColors(count: number): string[] {
-    const colors: string[] = [];
+  const colorPalette = ["#00bf7d", "#00b4c5", "#0073e6", "#E6308A", "#9b8bf4"]
 
-    for (let i = 0; i < count; i++) {
-      const hue = Math.round((360 / count) * i);
-      colors.push(`hsl(${hue}, 90%, 50%)`);
+  function getPaletteColorsForLength(length: number, colorPalette: string[]): string[] {
+    const colors: string[] = [];
+    const availableColors = ["red", "cyan", "blue"];
+
+    for (let i = 0; i < length; i++) {
+      colors.push(availableColors[availableColors.length % i]);
     }
 
     return colors;
@@ -150,7 +152,7 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
 
   const topModelColors: Record<string, string> = {};
 
-  const palette = getPrimaryColors(uniqueTopModelNames.length);
+  const palette = getPaletteColorsForLength(uniqueTopModelNames.length, colorPalette);
 
   const displayData =
     filteredUsage?.map((entry, index) => ({
@@ -171,6 +173,8 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
     }
   });
 
+  let colorPaletteIdx = 0;
+
   return (
     <Box sx={{ width: "100%", maxWidth: 1100, mx: "auto", p: 2 }}>
       <Card sx={{ width: "100%", mb: 4 }}>
@@ -190,7 +194,13 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
               variant="filled"
               value={teamId}
               onChange={(e) => setTeamId(e.target.value as string)}
-              sx={{ mb: 2, width: 200 }}
+              sx={{ 
+                mb: 2, 
+                width: 200,  
+                // "& .MuiFilledInput-root": {
+                //   backgroundColor: "green",
+                // },
+              }}
             />
 
             <Box sx={{ mb: 2 }}>
@@ -357,7 +367,7 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
                     {
                       label: "Total Calls vs. Period",
                       data: displayData.map((point) => point.totalCalls),
-                      color: "#1976d2",
+                      color: colorPalette[colorPalette.length % colorPaletteIdx++],
                     },
                   ]}
                 />
@@ -387,7 +397,7 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
                       {
                         label: "Tokens Consumed vs. Period",
                         data: displayData.map((point) => point.tokensConsumed),
-                        color: "yellow",
+                        color: colorPalette[colorPalette.length % colorPaletteIdx++],
                       },
                     ]}
                   />
@@ -424,13 +434,13 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
                         label: "Estimated Cost ($) vs. Period",
                         yAxisId: "cost",
                         data: displayData.map((p) => p.estimatedCost),
-                        color: "orange",
+                        color: colorPalette[colorPalette.length % colorPaletteIdx++],
                       },
                       {
                         label: "Estimated Cost Trend",
                         yAxisId: "trend",
                         data: estimatedCostTrendLineValues,
-                        color: "red",
+                        color: colorPalette[colorPalette.length % colorPaletteIdx++],
                         curve: "linear",
                         showMark: false,
                       },
@@ -444,5 +454,4 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
       )}
     </Box>
   );
-
 }
