@@ -128,5 +128,7 @@ This dashboard demonstrates a clean, maintainable, accessible, and responsive ap
 
 ## Screenshots
 ![alt text](image.png)
+
 ![alt text](image-1.png)
+
 ![alt text](image-2.png)
