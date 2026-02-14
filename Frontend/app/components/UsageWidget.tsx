@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import { AI_BACKEND_API_BASE_URL } from "~/constants/urls";
-import { AggregatePeriod, enumAggregatePeriodsStringArray, type Usage } from "../../types/Usage";
+import { AggregatePeriod, enumAggregatePeriodsArray, enumAggregatePeriodsStringArray, type Usage } from "../../types/Usage";
 import { CardContent, Divider, Card, CardHeader, TextField, AccordionDetails, AccordionSummary, Accordion, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, Select, MenuItem } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { getPeriodDescription, getShortPeriodDescription } from "~/utils/dataUtils";
@@ -49,21 +49,21 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
     }
   };
 
-  const weekOptions =
+  const weekOptions = periodType === "range" && data ?
     data
-      ?.filter((usageEntry) =>
+      .filter((usageEntry) =>
         /^year-\d{4}-week-\d{1,2}$/.test(usageEntry.period)
       )
       .map((usageEntry) => ({
         value: usageEntry.period,
         label: getPeriodDescription(usageEntry.period),
-      })) ?? [];
+      })) : [];
 
   let filteredUsage: Usage[] = data ?? [];
 
-  if (periodType === "aggregate") {
+  if (!error && periodType === "aggregate") {
     filteredUsage = filteredUsage.filter((usageEntry) =>
-      [AggregatePeriod.Last7Days, AggregatePeriod.LastMonth, AggregatePeriod.Last3Months, AggregatePeriod.LastYear]
+      enumAggregatePeriodsArray
         .map(val => val.toString())
         .includes(
           usageEntry.period
@@ -71,7 +71,7 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
     );
   }
 
-  if (periodType === "range" && startWeek && endWeek) {
+  if (!error && periodType === "range" && startWeek && endWeek) {
     const startIndex = filteredUsage.findIndex(
       (entry) => entry.period === startWeek
     );
