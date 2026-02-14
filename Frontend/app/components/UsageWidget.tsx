@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import { AI_BACKEND_API_BASE_URL } from "~/constants/urls";
 import { AggregatePeriod, enumAggregatePeriodsArray, enumAggregatePeriodsStringArray, type Usage } from "../../types/Usage";
-import { CardContent, Divider, Card, CardHeader, TextField, AccordionDetails, AccordionSummary, Accordion, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, Select, MenuItem } from "@mui/material";
+import { CardContent, Divider, Card, CardHeader, TextField, AccordionDetails, AccordionSummary, Accordion, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, Select, MenuItem, FormHelperText } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { getPeriodDescription, getShortPeriodDescription } from "~/utils/dataUtils";
 import { BarChart, LineChart } from "@mui/x-charts";
@@ -23,6 +23,35 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
   const initialWeekUsageData = data?.filter(entry => !enumAggregatePeriodsStringArray.includes(entry.period));
   const [startWeek, setStartWeek] = React.useState(initialWeekUsageData && initialWeekUsageData.length > 0 ? initialWeekUsageData[0].period : "");
   const [endWeek, setEndWeek] = React.useState(initialWeekUsageData && initialWeekUsageData.length > 0 ? initialWeekUsageData[initialWeekUsageData.length - 1].period : "");
+  const startWeekSplitValues = startWeek.split("-");
+  const endWeekSplitValues = endWeek.split("-");
+  const [startWeekIndex, setStartWeekIndex] = React.useState<number | null>(Number(startWeekSplitValues.length > 0 ? startWeekSplitValues[startWeekSplitValues.length - 1] : null));
+  const [endWeekIndex, setEndWeekIndex] = React.useState<number | null>(Number(endWeekSplitValues.length > 0 ? endWeekSplitValues[endWeekSplitValues.length - 1] : null));
+  const [rangeError, setRangeError] = React.useState<string | null>(null);
+
+  const handleStartWeekChange = (value: string) => {
+    console.log("change for start Week: ", value);
+    setStartWeek(value);
+    const valuesArray = value.split("-");
+    setStartWeekIndex(Number(valuesArray[valuesArray.length - 1]));
+  }
+
+  const handleEndWeekChange = (value: string) => {
+    console.log("change for end Week: ", value);
+    setEndWeek(value);
+    const valuesArray = value.split("-");
+    setEndWeekIndex(Number(valuesArray[valuesArray.length - 1]));
+  }
+
+  useEffect(() => {
+    console.log(startWeekIndex, endWeekIndex);
+    if (periodType === "range" && (startWeekIndex == null || endWeekIndex == null || startWeekIndex >= endWeekIndex)) {
+      setRangeError("Start week must be less than end week.");
+    } else {
+      setRangeError(null);
+    }
+  }, [startWeekIndex, endWeekIndex]);
+
 
   const handleSubmit = async (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -36,7 +65,7 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
       const usages: Usage[] = await aiUsageClient.getUsage(Number(teamId));
       setData(usages);
     } catch (err: any) {
-      setError(err.message);
+      setError("Error: There was a problem getting the usage data");
     } finally {
       const elapsed = performance.now() - start;
       const remaining = minDuration - elapsed;
@@ -244,7 +273,7 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
                   <Select
                     value={startWeek}
                     aria-labelledby="start-week-label"
-                    onChange={(e) => setStartWeek(e.target.value)}
+                    onChange={(e) => handleStartWeekChange(e.target.value)}
                     displayEmpty
                   >
                     <MenuItem value="">
@@ -263,7 +292,7 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
                   <Select
                     value={endWeek}
                     aria-labelledby="end-week-label"
-                    onChange={(e) => setEndWeek(e.target.value)}
+                    onChange={(e) => handleEndWeekChange(e.target.value)}
                     displayEmpty
                   >
                     <MenuItem value="">
@@ -285,13 +314,13 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
               </Box>
             )}
 
-            {error && !loading && (
+            {(error || rangeError) && !loading && (
               <Typography color="error" sx={{ my: 2 }}>
-                Error: There was a problem getting the usage data
+                {error != null ? error : rangeError != null ? rangeError : ""}
               </Typography>
             )}
 
-            <Button variant="contained" type="submit" disabled={loading} aria-label="Submit form info and load usage data">
+            <Button variant="contained" type="submit" disabled={loading || Boolean(rangeError)} aria-label="Submit form info and load usage data">
               {loading ? "Loading…" : "Submit"}
             </Button>
           </form>
@@ -317,7 +346,7 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
         </Box>
       </Card>
 
-      {data && !error && !loading && (
+      {data && !error && !rangeError && !loading && (
         <Box
           sx={{
             display: "grid",
