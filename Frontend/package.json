@@ -9,27 +9,27 @@
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
-    "@emotion/cache": "latest",
-    "@emotion/react": "latest",
-    "@emotion/server": "latest",
-    "@emotion/styled": "latest",
+    "@emotion/cache": "^11.14.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/server": "^11.11.0",
+    "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^7.3.8",
-    "@mui/material": "latest",
+    "@mui/material": "^7.3.8",
     "@mui/x-charts": "^8.27.0",
-    "@react-router/node": "latest",
-    "@react-router/serve": "latest",
-    "isbot": "latest",
-    "react": "latest",
-    "react-dom": "latest",
-    "react-router": "latest"
+    "@react-router/node": "^7.13.0",
+    "@react-router/serve": "^7.13.0",
+    "isbot": "^5.1.35",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-router": "^7.13.0"
   },
   "devDependencies": {
-    "@react-router/dev": "latest",
-    "@types/node": "latest",
-    "@types/react": "latest",
-    "@types/react-dom": "latest",
-    "typescript": "latest",
-    "vite": "latest",
-    "vite-tsconfig-paths": "latest"
+    "@react-router/dev": "^7.13.0",
+    "@types/node": "^25.2.3",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.1",
+    "vite-tsconfig-paths": "^6.1.1"
   }
 }
