@@ -176,7 +176,7 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
   let colorPaletteIdx = 0;
 
   return (
-    <Box sx={{ width: "100%", maxWidth: 1100, mx: "auto", p: 2 }}>
+    <Box sx={{ width: "100%", mx: "auto", p: 2 }}>
       <Card sx={{ width: "100%", mb: 4 }}>
         <CardHeader
           title="Usage Metrics"
