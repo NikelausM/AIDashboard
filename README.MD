@@ -1,6 +1,6 @@
 # 📊 AI Usage Dashboard — Architecture & Design Overview
 
-This project is a full‑stack demo application that displays AI platform usage metrics for a team. It consists of a .NET Core Web API backend and a React Router + MUI frontend, designed to showcase clean architecture, maintainability, responsive UI, and accessible data visualization.
+This project is a full‑stack demo application that displays AI platform usage metrics for a team. It consists of a .NET Core Web API backend and a React Router + MUI frontend, designed to showcase clean architecture, maintainability, responsive UI, good abstractions, and accessible data visualization.
 
 ## 🏗️ Backend: ASP.NET Core Web API
 
