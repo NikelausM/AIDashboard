@@ -7,7 +7,7 @@ import { AI_BACKEND_API_BASE_URL } from "~/constants/urls";
 import { AggregatePeriod, enumAggregatePeriodsStringArray, type Usage } from "../../types/Usage";
 import { CardContent, Divider, Card, CardHeader, TextField, AccordionDetails, AccordionSummary, Accordion, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, Select, MenuItem } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { getPeriodDescription } from "~/utils/dataUtils";
+import { getPeriodDescription, getShortPeriodDescription } from "~/utils/dataUtils";
 import { BarChart, LineChart } from "@mui/x-charts";
 
 export default function UsageWidget({ initialTeamId, initialUsageData }: { initialTeamId?: number, initialUsageData?: Usage[] }) {
@@ -162,8 +162,20 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
       tokensConsumed: entry.tokensConsumed,
       estimatedCost: entry.estimatedCost,
       topModels: entry.topModels,
-      period: getPeriodDescription(entry.period),
+      periodDescription: getPeriodDescription(entry.period),
+      shortPeriodDescription: getShortPeriodDescription(entry.period)
     })) ?? [];
+
+  
+  const periodDescriptions = new Array(displayData.length);
+  const shortPeriodDescriptions = new Array(displayData.length);
+  for (const entryIdx in displayData) {
+    const entry = displayData[entryIdx];
+    periodDescriptions[entryIdx] = entry.periodDescription;
+    shortPeriodDescriptions[entryIdx] = entry.shortPeriodDescription;
+  }
+
+  const periodXAxisLabel = periodType == "aggregate" ? "Period" : "Period (weeks)"
 
   const topModelSeries = uniqueTopModelNames.map((name, index) => {
     return {
@@ -334,8 +346,8 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
                     xAxis={[
                       {
                         scaleType: "band",
-                        data: displayData.map((p) => p.period),
-                        label: "Period",
+                        data: periodType == "aggregate" ? periodDescriptions : shortPeriodDescriptions,
+                        label: periodXAxisLabel,
                         tickLabelPlacement: "middle",
                         tickPlacement: "end",
                       },
@@ -359,8 +371,8 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
                   xAxis={[
                     {
                       scaleType: "band",
-                      data: displayData.map((point) => point.period),
-                      label: "Period",
+                      data: periodType == "aggregate" ? periodDescriptions : shortPeriodDescriptions,
+                      label: periodXAxisLabel,
                       tickLabelPlacement: "middle",
                       tickPlacement: "end",
                     },
@@ -390,8 +402,8 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
                     xAxis={[
                       {
                         scaleType: "band",
-                        data: displayData.map((point) => point.period),
-                        label: "Period",
+                        data: periodType == "aggregate" ? periodDescriptions : shortPeriodDescriptions,
+                        label: periodXAxisLabel,
                         tickLabelPlacement: "middle",
                         tickPlacement: "end",
                       },
@@ -421,8 +433,8 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
                     xAxis={[
                       {
                         scaleType: "band",
-                        data: displayData.map((p) => p.period),
-                        label: "Period",
+                        data: periodType == "aggregate" ? periodDescriptions : shortPeriodDescriptions,
+                        label: periodXAxisLabel,
                         tickLabelPlacement: "middle",
                         tickPlacement: "end",
                       },

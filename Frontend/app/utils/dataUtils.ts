@@ -22,5 +22,20 @@ export function getPeriodDescription(periodCode: string) {
   }
 
   return description;
+}
 
+export function getShortPeriodDescription(periodCode: string) {
+  let description = "";
+
+  if (isAggregatePeriod(periodCode)) {
+    description = aggregatePeriodTypeToDescriptionMap[periodCode];
+  } else if (/^year-\d+-week-\d+$/.test(periodCode)) {
+    const parts = periodCode.split("-");
+    const weekNumber = parts[parts.length - 1]; // safe, correct
+    description = weekNumber
+  } else {
+    description = periodCode;
+  }
+
+  return description;
 }
