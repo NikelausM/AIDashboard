@@ -349,7 +349,7 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
                         data: periodType == "aggregate" ? periodDescriptions : shortPeriodDescriptions,
                         label: periodXAxisLabel,
                         tickLabelPlacement: "middle",
-                        tickPlacement: "end",
+                        tickPlacement: "middle",
                       },
                     ]}
                     yAxis={[
@@ -374,7 +374,7 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
                       data: periodType == "aggregate" ? periodDescriptions : shortPeriodDescriptions,
                       label: periodXAxisLabel,
                       tickLabelPlacement: "middle",
-                      tickPlacement: "end",
+                      tickPlacement: "middle",
                     },
                   ]}
                   yAxis={[
@@ -405,7 +405,7 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
                         data: periodType == "aggregate" ? periodDescriptions : shortPeriodDescriptions,
                         label: periodXAxisLabel,
                         tickLabelPlacement: "middle",
-                        tickPlacement: "end",
+                        tickPlacement: "middle",
                       },
                     ]}
                     yAxis={[
@@ -436,7 +436,7 @@ export default function UsageWidget({ initialTeamId, initialUsageData }: { initi
                         data: periodType == "aggregate" ? periodDescriptions : shortPeriodDescriptions,
                         label: periodXAxisLabel,
                         tickLabelPlacement: "middle",
-                        tickPlacement: "end",
+                        tickPlacement: "middle",
                       },
                     ]}
                     yAxis={[
